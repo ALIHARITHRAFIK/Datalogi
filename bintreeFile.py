@@ -33,7 +33,8 @@ def skriv(p):
         skriv(p.left) #Kör vänster noden
         print(p.value, end = " ") #printar noden
         skriv(p.right)#Kör höger nod
-    
+
+  
 
 class Bintree:
     def __init__(self):
