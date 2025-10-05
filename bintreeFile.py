@@ -10,7 +10,7 @@ def putta(p, newvalue):
         return Node(newvalue) #om platsen är tom,skapas noden där
     elif newvalue < p.value: #Om det nya värdet är mindre än den existerande noden så går vi till vänster och rekurserar
         p.left = putta(p.left, newvalue) 
-    else:
+    elif newvalue > p.value:
         p.right = putta(p.right, newvalue) #Uppdaterar högerbarnet med den nya metoden efter rekursion
     return p #Retunerar noden med uppdaterade barn 
 

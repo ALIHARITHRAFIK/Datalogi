@@ -1,25 +1,46 @@
 from bintreeFile import Bintree
 
-#Första trädet svenska ord (taget från canvas, labb 3)
-svenska = Bintree()
-with open("word3.txt", "r", encoding = "utf-8") as svenskfil:
-    for rad in svenskfil:
-        ordet = rad.strip()                # Ett trebokstavsord per rad
-        if ordet in svenska:
-            print(ordet, end = " ") 
-        else:
-            svenska.put(ordet)             # in i sökträdet
-print("\n")
 
-#Andra trädet engelska ord
-engelska = Bintree()
-with open("engelska.txt", "r", encoding = "utf-8") as engfil:
-    for rad in engfil:
-        ordet = rad.strip()
-        if ordet in engelska: #Inget görs om raden är inlagt i engelska 
-            continue
-        else:
-            engelska.put(ordet) #Lägg in i engelska trådet
-            if ordet in svenska: #Om det även finns i svenska, ska det skrivas ut
-                print(ordet, end= " ")
-print("\n")
+def skapabarn(ord, svenska,gamla):
+    """ skapar alla barn till ett ord genom att byta ut en bokstav i taget"""
+
+    alfabet = "abcdefghijlkmopqrstuvxyzåäö"
+    barn = []
+
+    for i in range(len(ord)): #For-loopen körs enligt antalet bokstäver i ordet
+        for bokstav in alfabet:
+            if bokstav != ord[i]: #Bokstaven i alfabetet ska inte matcha bokstaven i 
+                nytt_ord = ord[:i] + bokstav + ord[i+1:] #Byter ut bokstaven i och behåller resten
+
+                if nytt_ord in svenska and nytt_ord not in gamla:
+                    print(nytt_ord)
+                    gamla.put(nytt_ord)
+                    barn.append(nytt_ord)
+    return barn 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
