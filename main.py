@@ -11,7 +11,7 @@ class SolutionFound (Exception):
     pass
 
 
-def writechain(node): #Skriver ut ledjan från startord till slutord rekursivt
+def writechain(node): #Skriver ut kedjan från startord till slutord rekursivt
     if node.parent is not None:
         writechain(node.parent) #Gå till föräldern först
     print(node.word) #skriv ut ordet 

@@ -6,9 +6,8 @@ from linkedQFile import LinkedQ
 def makechildren(ord, slutord, svenska, gamla, q):
     """ skapar alla barn till ett ord genom att byta ut en bokstav i taget"""
 
-    alfabet = "abcdefghijlkmopqrstuvxyzåäö"
-   
-
+    alfabet = "abcdefghijlkmnopqrstuvxyzåäö"
+ 
     for i in range(len(ord)): #For-loopen körs enligt antalet bokstäver i ordet
         for bokstav in alfabet:
             if bokstav != ord[i]: #Bokstaven i alfabetet ska inte matcha bokstaven i 
@@ -32,6 +31,7 @@ def makechildren(ord, slutord, svenska, gamla, q):
 
 
 def main():
+    """Main funktionen av allt"""
     #Läser in ordlistan
     svenska = Bintree()
 
