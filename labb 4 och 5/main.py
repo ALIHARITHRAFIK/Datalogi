@@ -1,14 +1,11 @@
 from bintreeFile import Bintree
 from linkedQFile import LinkedQ 
 
-class ParentNode:
+class ParentNode: #Denna klass definerar själva noden
     def __init__(self, word, parent=None):
         self.word = word
         self.parent = parent
         
-#Förklara denn del mer, finns i canvas, den används dock inte i koden direkt
-class SolutionFound (Exception):
-    pass
 
 
 def writechain(node): #Skriver ut kedjan från startord till slutord rekursivt
@@ -21,7 +18,7 @@ def makechildren(nod, slutord, svenska, gamla, q):
     """ skapar alla barn till ett ord genom att byta ut en bokstav i taget"""
     ord = nod.word
 
-    alfabet = "abcdefghijlkmopqrstuvxyzåäö"
+    alfabet = "abcdefghijlkmnopqrstuvxyzåäö"
    
 
     for i in range(len(ord)): #For-loopen körs enligt antalet bokstäver i ordet
@@ -81,7 +78,7 @@ def main():
 
     #Skapa kön och lägg in startordet
     q = LinkedQ()
-    startnod = ParentNode(startord) #skapa ParentNode för startord
+    startnod = ParentNode(startord) #Skapa ParentNode för startord
     q.enqueue(startnod)
 
     hittad = False
@@ -92,7 +89,7 @@ def main():
 
         
 
-        if makechildren(nod,slutord,svenska,gamla, q):
+        if makechildren(nod,slutord,svenska,gamla, q): #Första noden kommer att innehålla slutordet
             hittad = True 
             break
 
