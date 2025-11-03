@@ -82,27 +82,99 @@ def hash_sok(hashtable, artist):
     """
     return hashtable.get(artist, None)
 
+
+
+
+
+def bubble_sort(lista):
+    """
+    Bubble Sort - långsam sortering O(n²)
+    Från Claude AI
+    """
+    n = len(lista)
+    arr = lista.copy()
+    
+    for i in range(n):
+        swapped = False
+        for j in range(0, n - i - 1):
+            if arr[j].artist > arr[j + 1].artist:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if not swapped:
+            break
+    return arr
+
+
+def merge_sort(lista):
+    """
+    Merge Sort - snabb sortering O(n log n)
+    Från Claude AI
+    """
+    if len(lista) <= 1:
+        return lista
+    
+    mid = len(lista) // 2
+    left = merge_sort(lista[:mid])
+    right = merge_sort(lista[mid:])
+    
+    return merge(left, right)
+
+
+def merge(left, right):
+    """Hjälpfunktion för merge_sort - från Claude AI"""
+    result = []
+    i = j = 0
+    
+    while i < len(left) and j < len(right):
+        if left[i].artist <= right[j].artist:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+
 #========== main-Funktion ========
 def main():
-
     filename = "unique_tracks.txt"
 
     lista = readfile(filename)
     lista = lista[0:1000000] #För att välja n till tabellen
+
+    sorterad_lista = sorted(lista) #Skapar en sorterad lista för binärsökningen
+
+    hashtable = create_hashtable(lista) #Skapar hashtabellen för sökningen i en hashtabell
+
+
     n = len(lista)
     print("Antal element =", n)
 
     sista = lista[n-1]
     testartist = sista.artist
 
+    print("Söknings-delen:")
+
     linjtid = timeit.timeit(stmt = lambda: linsok(lista, testartist), number = 10000)
     print("Linjärsökningen tog", round(linjtid, 4) , "sekunder")
 
-    bintid = timeit.timeit(stmt = lambda: linsok(lista, testartist), number = 10000)
+    bintid = timeit.timeit(stmt = lambda: binsok(sorterad_lista, testartist), number = 10000)
     print("Binärsökningen tog", round(bintid, 4) , "sekunder")
 
-    hashtid = timeit.timeit(stmt = lambda: linsok(lista, testartist), number = 10000)
+    hashtid = timeit.timeit(stmt = lambda: hash_sok(hashtable, testartist), number = 10000)
     print("hashsökningen tog", round(hashtid, 4) , "sekunder")
+
+
+    print("Sorterings-delen: ")
+    bubble = timeit.timeit(stmt = lambda: bubble_sort(lista), number = 1)
+    print("bubble tog", round(bubble, 4) , "sekunder")
+    merge = timeit.timeit(stmt = lambda: merge_sort(lista), number = 1)
+    print("merge tog", round(merge, 4) , "sekunder")
+
+
 
 
    
