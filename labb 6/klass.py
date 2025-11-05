@@ -16,7 +16,7 @@ class Music():
 
 
 
-def readfile(filename):
+def readfile(filename): #Denna funktion är till för att läsa filen
     songs = []
     with open(filename,"r", encoding="utf-8") as file:
         for row in file:
@@ -143,7 +143,7 @@ def main():
     filename = "unique_tracks.txt"
 
     lista = readfile(filename)
-    lista = lista[0:1000000] #För att välja n till tabellen
+    lista = lista[0:500000] #För att välja n till tabellen
 
     sorterad_lista = sorted(lista) #Skapar en sorterad lista för binärsökningen
 
@@ -181,3 +181,50 @@ def main():
 
  
 main()
+
+
+"""
+Resultatet från labben:
+
+Sökning:
+                    n = 250 000           n = 500 000      n = 1 000 000
+Linjärsökning O(n):      11.41025s             0.5827s          0.0976s
+Binärsökning O(log n):    0.0137s              0.0130s          0.0121s
+Hashtabell O(1):         0.0006s               0.0006s          0.0006s
+
+
+Sortering:
+                                   n = 1000        n = 10 000 
+Långsam sorteringsmetod (Bubble) O(n²):  0.0337s         3.9065s 
+Snabbare sorteringsmetod (Merge) O(n logn):  0.0011s         0.0147s
+Kommentar: n för över 10 000 har inte testats då det skulle ta alldeses för lång tid.
+
+Analys:
+
+Resultatet i tabellen om de olika sökmetoderna stämmer inte helt med teorin om man kollar på linjärsökningen.Då 
+tiden minskar när n ökar ( 11.41s --> 0.58s --> 0.0976s), vilket inte ska kunna gå för O(n).Detta sker på grund av att i min kod så 
+söker jag efter den sista artisten i varje slicad lista, i den orginella 
+osorterade listan och det ger olika tider. T.ex. För n = 250k: artisten kanske ligger på plats 200 000 i filen --> lång söktid, 
+men för n = 1M: artisten kanske ligger på plats 10 000 i filen --> kort söktid. Det hade vart bättre att söka för samma artist, för att få 
+ett mindre missgivande resultat.Vad gäller Binär söktid är tiden nästan konstant 
+för alla n, vilket funkar bra med teorin och Hashtabellen är exakt samma för alla n vilket är också bra enligt teorin. 
+Om vi gör en hastighets jämförelse mellan Binärsökning och hashtabell så ser vi att i worst case är Binär ca 11.39s snabbare linjär och 
+hashtabellen är ca 11,41s snabbare.Däremot den snabbaste sökmetod bland alla tre är som man ser i tabellen Hashtabellen.
+
+I tabellen som innehåller resultaten från sorteringsmetoderna, så ser vi att den lång samma metoden, Bubble Sort,
+ökar från 0.034s till 3.91s. Den ökar alltså ca 100 gånger. Däremot om vi kollar på den snabba metoden, Merge sort,
+så ökar den från 0.001s till 0.015s. Den ökar alltså med ca 13 gånger. Slutsatsen som kan tas från tabbelen är att Bubble sort är
+alldeles för långsam och inte så effektiv vad gäller stora databaser, men detta gäller inte för Merge Sort som är mycket snabbare och effektivare. s
+
+
+
+
+
+
+
+
+
+
+
+
+"""
