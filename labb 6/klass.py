@@ -45,33 +45,38 @@ def linsok(lista,artist):
 
 def binsok(sorterad_lista, artist):
     """
-    Binärsökning i sorterad lista.
+    Binärsökning: Kollar mitten av listan, jämför alfabetiskt med den artist vi söker.
+    Om artisten vi söker kommer senare i alfabetet → sök uppåt (högre index).
+    Om artisten vi söker kommer tidigare i alfabetet → sök nedåt (lägre index).
+    Upprepar tills artisten hittas eller listan är slut..
     Denna kod är från Claude AI 
     """
-    low = 0
-    high = len(sorterad_lista) - 1
+    low = 0 #Börjar längst ner i listan
+    high = len(sorterad_lista) - 1 #Slutar längst upp i listan
     
-    while low <= high:
-        mid = (low + high) // 2
+    while low <= high: #Loopar till den hittar artisten
+        mid = (low + high) // 2 #Räknar ut mitten mellan low och high 
         if sorterad_lista[mid].artist == artist:
-            return sorterad_lista[mid]
-        elif sorterad_lista[mid].artist < artist:
-            low = mid + 1
-        else:
-            high = mid - 1
-    return None
+            return sorterad_lista[mid] #Om Artisten i mitten matchas så retuneras den
+        elif sorterad_lista[mid].artist < artist: #Om artisen i mitten  för tidig i listan
+            low = mid + 1 #Sök i den övre halvan 
+        else:  #Om artisen  i mitten  är sen i listan
+            high = mid - 1 #Sök i den nedre halvan
+    return None #Om artisten inte hittas alls
 
 
 def create_hashtable(lista):
     """
-    Skapar en hashtabell (dict) för snabb sökning.
+    Hashtabell: Organiserar låtar per artist som en "telefonbok".
+    Varje artist blir en nyckel som pekar direkt på alla deras låtar.
+    Gör sökning supersnabb - ingen looping behövs!
     Denna kod är från Claude AI.
     """
-    hashtable = {}
-    for song in lista:
-        if song.artist not in hashtable:
-            hashtable[song.artist] = []
-        hashtable[song.artist].append(song)
+    hashtable = {} #Skapar en tom hashtabell
+    for song in lista: #Går igenom vare sång i listan
+        if song.artist not in hashtable: #Kollar om artisten redan finns
+            hashtable[song.artist] = [] #Om inte,skapas en tom lista för den artisten
+        hashtable[song.artist].append(song) #Lägger till låten
     return hashtable
 
 
@@ -88,53 +93,58 @@ def hash_sok(hashtable, artist):
 
 def bubble_sort(lista):
     """
-    Bubble Sort - långsam sortering O(n²)
+    Bubble Sort: Jämför två grannar åt gången och byter plats om de är i fel ordning.
+    Varje varv "bubblar", alltså byts plats, den största artisten till slutet.
+    Upprepar tills hela listan är sorterad alfabetiskt.
+    Långsam men enkel metod! O(n²)
     Från Claude AI
     """
-    n = len(lista)
-    arr = lista.copy()
+    n = len(lista) # Antal element
+    arr = lista.copy() #Kopierar listan utan att ändra orginalet
     
     for i in range(n):
-        swapped = False
-        for j in range(0, n - i - 1):
-            if arr[j].artist > arr[j + 1].artist:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                swapped = True
+        swapped = False #Håller koll om något byts
+        for j in range(0, n - i - 1): #Jämför parvis element i listan och hoppar över redan sorterade sista elementet.
+            if arr[j].artist > arr[j + 1].artist: #Om vänster är större än höger (Alfabetiskt)
+                arr[j], arr[j + 1] = arr[j + 1], arr[j] #Byts plats
+                swapped = True #Markera att något har byts
         if not swapped:
             break
-    return arr
+    return arr #Listan retuneras
 
 
 def merge_sort(lista):
     """
-    Merge Sort - snabb sortering O(n log n)
+    Merge Sort: Delar listan i två halvor, sorterar varje halva (rekursivt),
+    och slår sedan ihop dem i rätt ordning. O(n log n)
     Från Claude AI
     """
-    if len(lista) <= 1:
+    if len(lista) <= 1: #Om listan har 0 eller 1 element är den redan sorterad så den retuneras.
         return lista
     
-    mid = len(lista) // 2
-    left = merge_sort(lista[:mid])
-    right = merge_sort(lista[mid:])
+    mid = len(lista) // 2 #Dela listan i två halvor, för att få mitten.
+    left = merge_sort(lista[:mid]) #Sorterar vänstra halvan,anropar sig rekursivt för varje halva
+    right = merge_sort(lista[mid:]) #Sorterar högra halvan och anropar också sig sjävt. 
     
-    return merge(left, right)
+    return merge(left, right) #slå ihop de sorterade lsitorna
 
 
 def merge(left, right):
-    """Hjälpfunktion för merge_sort - från Claude AI"""
+    """merge() tar två redan sorterade listor och jämför dem element för 
+    element för att skapa en slutgiltig sorterad lista.- från Claude AI"""
     result = []
-    i = j = 0
-    
-    while i < len(left) and j < len(right):
-        if left[i].artist <= right[j].artist:
-            result.append(left[i])
-            i += 1
+    i = j = 0    # Pekare för left och right
+
+    while i < len(left) and j < len(right):  # Så länge båda listorna har element
+        if left[i].artist <= right[j].artist:   # Jämför första elementet i varje lista  
+            result.append(left[i]) #Ta från vänster 
+            i += 1   # Flytta vänster-pekaren framåt
         else:
-            result.append(right[j])
-            j += 1
+            result.append(right[j])  # Ta från höger
+            j += 1 # Flytta höger-pekaren framåt
     
-    result.extend(left[i:])
-    result.extend(right[j:])
+    result.extend(left[i:])  # Lägg till det som är kvar i left
+    result.extend(right[j:]) # Lägg till det som är kvar i right
     return result
 
 
@@ -196,7 +206,8 @@ Hashtabell O(1):         0.0006s               0.0006s          0.0006s
 Sortering:
                                    n = 1000        n = 10 000 
 Långsam sorteringsmetod (Bubble) O(n²):  0.0337s         3.9065s 
-Snabbare sorteringsmetod (Merge) O(n logn):  0.0011s         0.0147s
+Snabbare sorteringsmetod (Merge sort) O(n logn):  0.0011s         0.0147s
+
 Kommentar: n för över 10 000 har inte testats då det skulle ta alldeses för lång tid.
 
 Analys:
@@ -214,15 +225,7 @@ hashtabellen är ca 11,41s snabbare.Däremot den snabbaste sökmetod bland alla 
 I tabellen som innehåller resultaten från sorteringsmetoderna, så ser vi att den lång samma metoden, Bubble Sort,
 ökar från 0.034s till 3.91s. Den ökar alltså ca 100 gånger. Däremot om vi kollar på den snabba metoden, Merge sort,
 så ökar den från 0.001s till 0.015s. Den ökar alltså med ca 13 gånger. Slutsatsen som kan tas från tabbelen är att Bubble sort är
-alldeles för långsam och inte så effektiv vad gäller stora databaser, men detta gäller inte för Merge Sort som är mycket snabbare och effektivare. s
-
-
-
-
-
-
-
-
+alldeles för långsam och inte så effektiv vad gäller stora databaser, men detta gäller inte för Merge Sort som är mycket snabbare och effektivare. 
 
 
 
