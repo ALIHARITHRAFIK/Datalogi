@@ -48,9 +48,9 @@ class Hashtable:
          Beräknar hashfunktionen för key"""
       hash_value = 0
       for char in key:
-         #ord() konverterar varje tecken till heltal
+         #ord() konverterar varje tecken till heltal. Varje tecken har ett fixat heltal av datorn.
          hash_value = hash_value * 31 + ord(char)
-      return hash_value % self.size
+      return hash_value % self.size #% ger resten vid division, gör så att hash_value alltid hamnar på en hylla som finns ( 0 till size-1)
    
 
    
