@@ -223,8 +223,8 @@ Om vi gör en hastighets jämförelse mellan Binärsökning och hashtabell så s
 hashtabellen är ca 11,41s snabbare.Däremot den snabbaste sökmetod bland alla tre är som man ser i tabellen Hashtabellen.
 
 I tabellen som innehåller resultaten från sorteringsmetoderna, så ser vi att den lång samma metoden, Bubble Sort,
-ökar från 0.034s till 3.91s. Den ökar alltså ca 100 gånger. Däremot om vi kollar på den snabba metoden, Merge sort,
-så ökar den från 0.001s till 0.015s. Den ökar alltså med ca 13 gånger. Slutsatsen som kan tas från tabbelen är att Bubble sort är
+ökar från 0.034s till 3.91s. så den tar 3.876s längre. Däremot om vi kollar på den snabba metoden, Merge sort,
+så ökar den från 0.001s till 0.015s. så den tar 0.014s. Slutsatsen som kan tas från tabbelen är att Bubble sort är
 alldeles för långsam och inte så effektiv vad gäller stora databaser, men detta gäller inte för Merge Sort som är mycket snabbare och effektivare. 
 
 
