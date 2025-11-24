@@ -44,8 +44,7 @@ class LinkedQ:
 
 
             
-
-
+#+  resten_av_kon(q) 
 
         
 
