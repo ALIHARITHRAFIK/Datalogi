@@ -1,8 +1,70 @@
 from linkedQFile import LinkedQ
 import unittest
 
+
+
+#Godkända atomer
+godkanda_atomer = """H   He  Li  Be  B   C   N   O   F   Ne  Na  Mg  Al  Si  P   S   Cl  Ar  K   Ca  Sc  Ti  V   Cr
+Mn  Fe  Co  Ni  Cu  Zn  Ga  Ge  As  Se  Br  Kr  Rb  Sr  Y   Zr  Nb  Mo  Tc  Ru  Rh  Pd  Ag  Cd
+In  Sn  Sb  Te  I   Xe  Cs  Ba  La  Ce  Pr  Nd  Pm  Sm  Eu  Gd  Tb  Dy  Ho  Er  Tm  Yb  Lu  Hf
+Ta  W   Re  Os  Ir  Pt  Au  Hg  Tl  Pb  Bi  Po  At  Rn  Fr  Ra  Ac  Th  Pa  U   Np  Pu  Am  Cm
+Bk  Cf  Es  Fm  Md  No  Lr  Rf  Db  Sg  Bh  Hs  Mt  Ds  Rg  Cn  Fl  Lv """
+
 class Syntaxfel(Exception):
     pass
+
+def formel(q):
+    """<formel>::= <mol> \n"""
+    mol(q)
+    #Efter mol() ska kön vara tom
+    if not q.isEmpty():
+        raise Syntaxfel("Felaktig gruppstart vid radslutet " + resten_av_kon(q))
+
+def mol(q):
+    """<mol>   ::= <group> | <group><mol>"""
+    group(q)
+
+    #Om det finns mer kvar och det inte är ), fortsätt läsa fler grupper
+    if not q.isEmpty() and q.peek() != ')':
+        mol(q)
+
+def group(q):
+    """<group> ::= <atom> |<atom><num> | (<mol>) <num>"""
+    if q.isEmpty():
+        raise Syntaxfel("Felaktig gruppstart vid radslutet")
+    
+    #Om gruppen börjar med (
+    if q.peek() == '(':
+        q.dequeue() #Ta bort '('
+        mol(q) #Läs molekylen inuti parentesen
+
+        #Nu måste det komma en )
+        if q.isEmpty() or q.peek() != ')':
+            raise Syntaxfel("Saknad högerparentes vid radslutet" + resten_av_kon(q))
+    
+        q.dequeue() #Ta bort ')'
+
+        #Efter ) måste det komma ett tal
+        if q.isEmpty() or not q.peek().isdigit():
+            raise Syntaxfel("Saknad siffra vid radslutet" + resten_av_kon(q))
+    
+        num(q)
+
+    #Om gruppen börjar med stor bokstav
+    elif q.peek().isupper():
+        atom(q)
+
+        #Om det följs av ett tal 
+        if not q.isEmpty() and q.peek().isdigit():
+            num(q)
+
+    #Annars är det fel
+    else:
+        raise Syntaxfel("Felaktig gruppstart vid radslutet " + resten_av_kon(q))
+
+
+        
+
 
 
 def molekyl(q):
@@ -11,7 +73,7 @@ def molekyl(q):
     if not q.isEmpty() and q.peek().isdigit():
         num(q)
 
- 
+
 
 def atom(q):
     """   <atom>  ::= <LETTER> | <LETTER><letter>"""
