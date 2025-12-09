@@ -286,6 +286,8 @@ def group(q):
         if q.isEmpty() or not q.peek().isdigit():
             raise Syntaxfel("Saknad siffra vid radslutet " + resten_av_kon(q))
         
+        ruta.num = num(q)
+        
     
 
     #Om gruppen börjar med stor bokstav
@@ -369,6 +371,7 @@ def num(q):
             q.dequeue()
     else:
         #Första siffran är 2-9, ta bort den 
+        num_str = q.peek()
         q.dequeue()
         
         #Ta upp resterande siffror
@@ -385,12 +388,12 @@ def weight(mol):
         return 0.0
     
     #Vikt för denna ruta
-    if mol.atom == "( )":
+    if mol.atom == "()":
         #Parantesgrupp - räkna vikten av down * num
         vikt = weight(mol.down) * mol.num
     else:
         #Atom - hämta atomvikt * num
-        vikt = hämta_atomvikt.get(mol.atom, 0) * mol.num
+        vikt = hämta_atomvikt(mol.atom) * mol.num
     
     #Lägg till vikten av next
     vikt += weight(mol.next)
@@ -436,7 +439,7 @@ def main():
         if formel_str == "":
             break
         
-        #Vi tar bara emot mol_tree nu (felet skrivs inuti kolla_molekyl)
+     
         mol_tree = kolla_molekyl(formel_str)
 
         if mol_tree is not None:
