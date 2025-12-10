@@ -228,8 +228,8 @@ def hämta_atomvikt(atomnamn):
     for element in atom_vikt.split(';'):
         if element.strip():
             parts = element.strip().split()
-            if len(parts) == 2 and parts[0] == atomnamn:
-                    return float(parts[1])
+            if len(parts) == 2 and parts[0] == atomnamn: #Kollar att det finns två element i listan och att atomen vi letar efter finns
+                    return float(parts[1]) #Vikten retuneras
     return 0.0 #om atomen inte hittas
                     
 
@@ -239,7 +239,7 @@ def hämta_atomvikt(atomnamn):
 def formel(q):
     """<formel>::= <mol> \n - RETUNERAR Träd"""
  
-    mol_tree = mol(q)
+    mol_tree = mol(q) #Hela molekylträdet
 
 
 
@@ -251,12 +251,12 @@ def formel(q):
 
 def mol(q):
     """<mol>   ::= <group> | <group><mol>"""
-    mol_tree = group(q)
+    forsta_gruppen = group(q) #Första gruppen i molekylen 
 
     #Om det finns mer kvar och det inte är ), fortsätt läsa fler grupper
     if not q.isEmpty() and q.peek() != ')':
-        mol_tree.next = mol(q)
-    return mol_tree
+        forsta_gruppen.next = mol(q) #Bygg och länka det till resten av molekylen trädet rekursivt
+    return forsta_gruppen
 
 
 def group(q):
@@ -286,17 +286,16 @@ def group(q):
         if q.isEmpty() or not q.peek().isdigit():
             raise Syntaxfel("Saknad siffra vid radslutet " + resten_av_kon(q))
         
-        ruta.num = num(q)
         
-    
 
     #Om gruppen börjar med stor bokstav
     elif q.peek().isalpha(): #isalpha ser till att det är en bokstav, vare sig stor eller liten- 
-        ruta.atom = atom(q) #sätt atom
+        ruta.atom = atom(q) #Förbered info om atomen, som kommer att användas i bilden 
 
         #Om det följs av ett tal 
         if not q.isEmpty() and q.peek().isdigit():
-            ruta.num = num(q)
+            ruta.num = num(q) #Förbered info om atomen talet, som kommer att användas i bilden 
+
 
     #Annars är det fel
     else:
@@ -306,10 +305,6 @@ def group(q):
 
 
         
-
-
-
-
 
 def atom(q):
     """   <atom>  ::= <LETTER> | <LETTER><letter> """
@@ -338,9 +333,7 @@ def atom(q):
     
 
 
- 
 
-     
 
 def num(q):
     """ <num>   ::= 2 | 3 | 4 | ... - Retunera tal"""
@@ -355,7 +348,7 @@ def num(q):
         q.dequeue() 
         raise Syntaxfel("För litet tal vid radslutet " +  resten_av_kon(q))
     
-    num_str = ""
+    num_str = "" #Skapar en tom behållare
 
     #Om första siffran är 1, kolla om det bara är "1" eller om det följs av fler siffror
     if q.peek() == '1':
@@ -365,21 +358,26 @@ def num(q):
         if q.isEmpty() or not q.peek().isdigit():
             raise Syntaxfel("För litet tal vid radslutet "+ resten_av_kon(q))
  
-
+        #Ta upp resterande siffror efter 1
         while not q.isEmpty() and q.peek().isdigit():
             num_str += q.peek()
             q.dequeue()
     else:
         #Första siffran är 2-9, ta bort den 
-        num_str = q.peek()
+        num_str = q.peek() #Sparara det allra första elementet i num_str
         q.dequeue()
         
-        #Ta upp resterande siffror
+        #Ta upp resterande siffror efter den första 
         while not q.isEmpty() and q.peek().isdigit():
             num_str += q.peek()
             q.dequeue()
 
     return int(num_str)
+
+
+
+ 
+
 
 
 def weight(mol): 
@@ -388,10 +386,11 @@ def weight(mol):
         return 0.0
     
     #Vikt för denna ruta
-    if mol.atom == "()":
+    if mol.atom == "()": #Hanterar parantes grupper
         #Parantesgrupp - räkna vikten av down * num
-        vikt = weight(mol.down) * mol.num
-    else:
+        vikt = weight(mol.down) * mol.num #mol.down är pilen som pekar på första atomen i ()
+
+    else: #Hanterar vanliga atomer
         #Atom - hämta atomvikt * num
         vikt = hämta_atomvikt(mol.atom) * mol.num
     
@@ -432,14 +431,14 @@ def kolla_molekyl(molekyl_str):
 
 def main():
     """Huvudprogrammet"""
-    mg = Molgrafik()
+    mg = Molgrafik() #skapa grafik objektet
     while True:
         formel_str = input("Molekyl: "). strip()
 
         if formel_str == "":
             break
         
-     
+        #Vi tar bara emot mol_tree nu (felet skrivs inuti kolla_molekyl)
         mol_tree = kolla_molekyl(formel_str)
 
         if mol_tree is not None:
@@ -447,7 +446,7 @@ def main():
             vikt = weight(mol_tree)
             print("Molekylvikt: ", vikt)
 
-            mg.show(mol_tree)
+            mg.show(mol_tree) #Rita molekyl trädet i tk fönster
          
     
 
