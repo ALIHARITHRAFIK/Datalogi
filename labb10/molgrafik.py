@@ -270,6 +270,7 @@ def group(q):
     if q.peek() == '(':
         q.dequeue() #Ta bort '('
         ruta.down = mol(q) #Sätt down till molekylen inuti
+        
 
         #Nu måste det komma en )
         if q.isEmpty() or q.peek() != ')':
@@ -285,7 +286,7 @@ def group(q):
         #Efter ) måste det komma ett tal
         if q.isEmpty() or not q.peek().isdigit():
             raise Syntaxfel("Saknad siffra vid radslutet " + resten_av_kon(q))
-        
+        ruta.num = num(q)
         
 
     #Om gruppen börjar med stor bokstav
@@ -304,7 +305,6 @@ def group(q):
     return ruta
 
 
-        
 
 def atom(q):
     """   <atom>  ::= <LETTER> | <LETTER><letter> """
